@@ -1,0 +1,35 @@
+{#
+Report (snippet)
+
+table - main data, as a list of rows, each row is a dict
+data - other data values, as a dict
+#}
+<ul>
+    <li>Total ammount of datasets: {{ table|length }}</li>
+</ul>
+<table class="table table-bordered table-condensed" id="report-table"  data-module="statsresources-js-autosubmit">
+    <thead>
+      <tr>
+        <th>Dataset</th>
+        <th>Link</th>
+        <th>Owner</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in table[:100] %}
+        <tr>
+          <td>
+            <a href="{{ h.url_for(controller='package', action='read', id=row.title) }}">
+              {{ row.title }}
+            </a>
+          </td>
+          <td>{{ row.url }}</td>
+          <td>{{ row.owner }}</td>
+          <td>{{ h.render_datetime(row.created_at, None, True) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+{% resource 'statsresources/scripts/statsresources-js-autosubmit.js' %}
