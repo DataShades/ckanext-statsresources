@@ -12,7 +12,7 @@ def dataset_creation(organization=None, include_sub_organizations=False,
                      include_private=False, include_draft=False,
                      page=1):
     """Produce a report with basic dataset info."""
-    selectable_states = {'active'}
+    selectable_states = set(['active'])
     if include_draft:
         selectable_states.add('draft')
 
