@@ -107,10 +107,10 @@ class TestStatsReports(FunctionalTestBase):
         factories.Dataset(owner_org=org['id'])
         factories.Dataset(owner_org=org['id'], private=True)
 
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 2)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 2)
 
         dr['option_defaults']['include_private'] = True
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 3)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 3)
 
     def test_data_creation_draft_option(self):
         """Test whether result differs for include_draft."""
@@ -122,10 +122,10 @@ class TestStatsReports(FunctionalTestBase):
         factories.Dataset(owner_org=org['id'])
         factories.Dataset(owner_org=org['id'], state='draft')
 
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 2)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 2)
 
         dr['option_defaults']['include_draft'] = True
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 3)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 3)
 
     def test_data_creation_draft_and_private_option(self):
         """Test whether result differs for include_draft and include_private."""
@@ -143,17 +143,17 @@ class TestStatsReports(FunctionalTestBase):
         factories.Dataset(owner_org=org['id'], state='draft', private=True)
         factories.Dataset(owner_org=org['id'], state='draft', private=True)
 
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 2)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 2)
 
         o = dr['option_defaults']
         o['include_draft'], o['include_private'] = True, False
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 4)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 4)
 
         o['include_draft'], o['include_private'] = False, True
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 5)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 5)
 
         o['include_draft'], o['include_private'] = True, True
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 9)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 9)
 
     def test_data_creation_different_organizations(self):
         """Test whether result differs for different organizations."""
@@ -172,12 +172,12 @@ class TestStatsReports(FunctionalTestBase):
         factories.Dataset(owner_org=org2['id'])
         factories.Dataset(owner_org=org2['id'])
         factories.Dataset(owner_org=org2['id'])
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 9)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 9)
 
         o['organization'] = org1['name']
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 2)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 2)
         o['organization'] = org2['name']
-        nt.assert_is(len(self._get_report(app, dr, True)[0]['table']), 3)
+        nt.assert_equal(len(self._get_report(app, dr, True)[0]['table']), 3)
 
     def test_data_creation_json(self):
         """Test JSON report."""
@@ -208,10 +208,10 @@ class TestStatsReports(FunctionalTestBase):
 
         app.post(url, **kwpost)
         json_report = app.get(url + '?format=json').json['table']
-        nt.assert_is(len(json_report), 2)
+        nt.assert_equal(len(json_report), 2)
 
-        nt.assert_in(d1_dict, json_report)
-        nt.assert_in(d2_dict, json_report)
+        nt.assert_true(d1_dict in json_report)
+        nt.assert_true(d2_dict in json_report)
 
         d3 = factories.Dataset()
         d3_dict = dict(
@@ -224,11 +224,11 @@ class TestStatsReports(FunctionalTestBase):
 
         app.post(url, **kwpost)
         json_report = app.get(url + '?format=json').json['table']
-        nt.assert_is(len(json_report), 3)
+        nt.assert_equal(len(json_report), 3)
 
-        nt.assert_in(d1_dict, json_report)
-        nt.assert_in(d2_dict, json_report)
-        nt.assert_in(d3_dict, json_report)
+        nt.assert_true(d1_dict in json_report)
+        nt.assert_true(d2_dict in json_report)
+        nt.assert_true(d3_dict in json_report)
 
     def test_data_creation_csv(self):
         """Test CSV report."""
@@ -242,7 +242,7 @@ class TestStatsReports(FunctionalTestBase):
         csv_file1 = StringIO.StringIO()
         fields = ['title', 'url', 'owner', 'created_at']
         csv_writer = csv.DictWriter(csv_file1, fields, quoting=csv.QUOTE_ALL)
-        csv_writer.writeheader()
+        csv_writer.writerow(dict(zip(fields, fields)))
 
         d1 = factories.Dataset()
         csv_writer.writerow(dict(
