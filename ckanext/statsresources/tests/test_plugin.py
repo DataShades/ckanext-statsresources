@@ -79,9 +79,9 @@ class TestStatsReports(FunctionalTestBase):
         p = plugin.StatsresourcesPlugin()
         reports = p.register_reports()
         for report in reports:
-            report_keys = {
+            report_keys = set([
                 'option_defaults', 'option_combinations', 'description',
-                'template', 'generate', 'name', 'title'}
+                'template', 'generate', 'name', 'title'])
             nt.assert_equal(set(report.keys()) ^ report_keys, set(), 'Incorrect report keys')
 
     def test_data_creation_report_before_and_after_refresh(self):
