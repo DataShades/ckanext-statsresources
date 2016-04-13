@@ -220,7 +220,7 @@ class TestStatsReports(FunctionalTestBase):
             created_at=d3['metadata_created'],
             title=d3['title']
         )
-        nt.assert_not_in(d3_dict, json_report)
+        nt.assert_false(d3_dict in json_report)
 
         app.post(url, **kwpost)
         json_report = app.get(url + '?format=json').json['table']
