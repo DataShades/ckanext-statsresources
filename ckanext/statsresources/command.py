@@ -121,6 +121,7 @@ class StatsresourcesCommand(tk.CkanCommand):
             get_file.name = 'report.{0}'.format(report.format)
 
             self._upload_report({'id': res_id}, [('upload', get_file)])
+            print "{0} generated".format(report)
 
     def _create_resource(self, data, files):
         requests.post(self.rcu, headers=self.headers, data=data, files=files)
