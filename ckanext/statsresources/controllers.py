@@ -1,7 +1,7 @@
 from ckanext.report.controllers import ReportController
 import ckan.logic as logic
 import ckan.model as model
-
+import ckan.lib.helpers as h
 import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
 from pylons import config
@@ -32,5 +32,5 @@ class StatsresourcesController(ReportController):
         )
 
     def data_redirect(self, url):
-        newurl = '/report/' + url + '?' + urllib.urlencode(toolkit.request.params)
+        newurl = h.url_for('reports') + '/' + url + '?' + urllib.urlencode(toolkit.request.params)
         return base.redirect(newurl, code=301)
