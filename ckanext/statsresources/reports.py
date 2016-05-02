@@ -52,18 +52,20 @@ def dataset_creation_combinations():
     for organization in lib.all_organizations(include_none=True):
         for include_sub_organizations in (False, True):
             for include_private in (False, True):
-                yield {
-                    'organization': organization,
-                    'include_sub_organizations': include_sub_organizations,
-                    'include_private': include_private
-                }
+                for include_draft in (False, True):
+                    yield {
+                        'organization': organization,
+                        'include_sub_organizations': include_sub_organizations,
+                        'include_private': include_private,
+                        'include_draft': include_draft
+                    }
 
 
 stats_reports_info = [
     {
         'name': 'dataset_creation',
         'title': 'Dataset creation',
-        'description': 'Datasets with their generic information.',
+        'description': 'Datasets creation report.',
         'option_defaults': OD,
         'option_combinations': dataset_creation_combinations,
         'generate': dataset_creation,
