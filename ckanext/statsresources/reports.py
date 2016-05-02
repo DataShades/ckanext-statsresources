@@ -7,9 +7,18 @@ from ckan.lib.helpers import (
 )
 from ckanext.statsresources.helpers import get_org_title
 
+OD = OrderedDict((
+    ('organization', None),
+    ('include_sub_organizations', False),
+    ('include_private', False),
+    ('include_draft', False),
+))
 
-def dataset_creation(organization=None, include_sub_organizations=False,
-                     include_private=False, include_draft=False,
+
+def dataset_creation(organization=OD['organization'],
+                     include_sub_organizations=OD['include_sub_organizations'],
+                     include_private=OD['include_private'],
+                     include_draft=OD['include_draft'],
                      page=1):
     """Produce a report with basic dataset info."""
     selectable_states = set(['active'])
@@ -34,6 +43,7 @@ def dataset_creation(organization=None, include_sub_organizations=False,
                 ('created_at', pkg.metadata_created.isoformat()),
             )) for pkg in query.all()
         ],
+        'a': query.count()
     }
 
 
@@ -54,12 +64,7 @@ stats_reports_info = [
         'name': 'dataset_creation',
         'title': 'Dataset creation',
         'description': 'Datasets with their generic information.',
-        'option_defaults': OrderedDict((
-            ('organization', None),
-            ('include_sub_organizations', False),
-            ('include_private', False),
-            ('include_draft', False),
-        )),
+        'option_defaults': OD,
         'option_combinations': dataset_creation_combinations,
         'generate': dataset_creation,
         'template': 'report/dataset-creation.html',

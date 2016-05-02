@@ -1,43 +1,21 @@
 """Tests for plugin.py."""
-import ckanext.statsresources.plugin as plugin
-from ckanext.report.model import init_tables as init_report_tables
-import nose.tools as nt
-from ckan.logic import get_action
-import json
-from ckan import model
-import ckan.logic as logic
-from itertools import count
 from ckan.tests.helpers import FunctionalTestBase
-import unittest
-import ckan.tests.factories as factories
-from routes import url_for
+from ckanext.report.model import init_tables as init_report_tables
 from pylons import config
-import warnings
+from routes import url_for
 from sqlalchemy import exc as sa_exc
+import ckan.tests.factories as factories
+import ckanext.statsresources.plugin as plugin
 import csv
+import json
+import nose.tools as nt
 import StringIO
+import warnings
 
 warnings.catch_warnings()
 warnings.simplefilter("ignore", category=sa_exc.SAWarning)
 
 DC_REPORT = 'dataset_creation'
-count_iterator = count(1)
-base_context_zip = [
-    ('model', model),
-    ('user', None),
-    ('site_url', 'http://vk.xom')
-]
-no_auth_context = dict(base_context_zip + [('ignore_auth', True)])
-SIMPLE_USER_NAME = 'simple_test_user'
-simple_user_zip = [
-    ('name', SIMPLE_USER_NAME),
-    ('email', 'simple_user@example.com'),
-    ('password', 'simplepassword'),
-]
-
-simple_dataset = [
-    ('notes', ''),
-]
 
 
 class TestStatsReports(FunctionalTestBase):

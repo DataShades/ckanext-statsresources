@@ -79,5 +79,8 @@ setup(
     entry_points='''
         [ckan.plugins]
         statsresources=ckanext.statsresources.plugin:StatsresourcesPlugin
+
+        [paste.paster_command]
+        statsresources = ckanext.statsresources.command:StatsresourcesCommand
     ''',
 )
