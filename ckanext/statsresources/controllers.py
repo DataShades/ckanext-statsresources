@@ -5,6 +5,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 import ckan.lib.base as base
 from pylons import config
+import urllib
 
 
 class StatsresourcesController(ReportController):
@@ -29,3 +30,7 @@ class StatsresourcesController(ReportController):
         return getattr(super(StatsresourcesController, self), original_action)(
             **args
         )
+
+    def data_redirect(self, url):
+        newurl = '/report/' + url + '?' + urllib.urlencode(toolkit.request.params)
+        return base.redirect(newurl, code=301)

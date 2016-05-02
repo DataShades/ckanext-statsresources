@@ -19,6 +19,7 @@ class StatsresourcesPlugin(plugins.SingletonPlugin):
             m.connect('report', '/report/:report_name', original_action='view')
             m.connect('report-org', '/report/:report_name/:organization',
                       original_action='view')
+        map.connect('/data/report/{url:.*}', controller=report_ctlr, action='data_redirect')
         return map
 
     # IConfigurer
