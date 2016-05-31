@@ -9,7 +9,7 @@ import ckan.model as model
 import requests
 from StringIO import StringIO
 
-Report = namedtuple('Report', 'name, format, package')
+Report = namedtuple('Report', 'name, format, package, title')
 
 
 class StatsresourcesCommand(tk.CkanCommand):
@@ -43,7 +43,7 @@ class StatsresourcesCommand(tk.CkanCommand):
         self.__reports = [
             Report._make(x.split(':')) for x in
             config.get('statsresources.report_map', '').splitlines()
-            if x.count(':') == 2
+            if x.count(':') == 3
         ]
         self.sysadmin = model.Session.query(model.User).filter(
             model.User.sysadmin.is_(True)).first()
@@ -111,30 +111,42 @@ class StatsresourcesCommand(tk.CkanCommand):
                 self._create_resource({
                     'package_id': report.package,
                     'id': res_id,
-                    'name': '{0.format} Statistics({0.name})'.format(report),
+                    'name': report.title,
+                    # 'name': '{0.format} Statistics({0.name})'.format(report),
                     'format': report.format,
                     'url': 'temporary_url'
-                  }, {'file': StringIO()})
-            content = self._get_report_content(report)
+                }, {'file': StringIO()})
+            kwargs = {}
+            try:
+                op = self._get_config().get(
+                    'statsresources.{0}.options'.format(report.name))
+                if op:
+                    kwargs = dict([
+                        l.split(':')
+                        for l in op.split()
+                    ])
+            except Exception:
+                pass
+            content = self._get_report_content(report, kwargs)
 
             get_file = StringIO(content)
             get_file.name = 'report.{0}'.format(report.format)
 
-            self._upload_report({'id': res_id}, [('upload', get_file)])
+            self._upload_report({'id': res_id, 'name': report.title}, [('upload', get_file)])
             print "{0} generated".format(report)
 
     def _create_resource(self, data, files):
         requests.post(self.rcu, headers=self.headers, data=data, files=files)
 
-    def _get_report_content(self, report):
-        url = self._get_report_url(report.name, report.format)
+    def _get_report_content(self, report, kwargs):
+        url = self._get_report_url(report.name, report.format, kwargs)
         resp = requests.get(url, headers=self.headers)
         if report.format not in resp.headers['content-type']:
             print "{0.name}: Content-type from {1} does not contains report format.".format(report, url)
         return resp.content
 
-    def _get_report_url(self, name, format):
-        return h.url_for('report', report_name=name, qualified=True, format=format)
+    def _get_report_url(self, name, format, kwargs):
+        return h.url_for('report', report_name=name, qualified=True, format=format, **kwargs)
 
     def _upload_report(self, data, files):
         requests.post(self.rpu, headers=self.headers, data=data, files=files)
