@@ -41,17 +41,26 @@ Config variables
 ``reports.strict_access = true|false`` - if set to True, then just sysadmin allowed to visit /reports pages. Default value: False
 
 
-``statsresources.report_map = REPORT_NAME:FORMAT:PACKAGE_ID`` - allows multiple values(each from new line). Configure endpoints of `paster statsresources generate` command
+``statsresources.report_map = REPORT_NAME:FORMAT:PACKAGE_ID:RESOURCE_TITLE`` - allows multiple values(each from new line). Configure endpoints of `paster statsresources generate` command
 For example::
    statsresources.report_map =
-      dataset_creation:json:1234-1234-1234-1234
-      dataset_creation:csv:1234-1234-1234-1234
+      dataset_creation:json:1234-1234-1234-1234:Creation Dates JSON
+      dataset_creation:csv:1234-1234-1234-1234:Creation Dates CSV
 
 Run::
 
    paster statsresources list -c path/to/config/file.ini #show list of all stat resoruces that will be generated
    paster statsresources generate -c path/to/config/file.ini #create/update corresponding resources
-   
+
+Dataset Creation Dates Report
+-----------------------------
+
+By default the report doesn't include private and draft datasets (as on /report/... page without any GET parameters). This can be configured with `statsresources.REPORT_NAME.options`, like::
+
+   statsresources.dataset_creation.options =
+     include_private:true
+     include_draft:false
+
 -----------------
 Running the Tests
 -----------------
