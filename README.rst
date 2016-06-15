@@ -54,10 +54,21 @@ By default, reports are generated with default options(as report without any add
         include_private:false
         include_draft:true
 
+
 Run::
 
    paster statsresources list -c path/to/config/file.ini #show list of all stat resoruces that will be generated
    paster statsresources generate -c path/to/config/file.ini #create/update corresponding resources
+
+
+Dataset Creation Dates Report
+-----------------------------
+
+By default the report doesn't include private and draft datasets (as on /report/... page without any GET parameters). This can be configured with `statsresources.REPORT_NAME.options`, like::
+
+   statsresources.dataset_creation.options =
+     include_private:true
+     include_draft:false
 
 -----------------
 Running the Tests
