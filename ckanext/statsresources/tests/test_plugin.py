@@ -222,12 +222,13 @@ class TestStatsReports(FunctionalTestBase):
         csv_writer = csv.DictWriter(csv_file1, fields, quoting=csv.QUOTE_ALL)
         csv_writer.writerow(dict(zip(fields, fields)))
 
-        d1 = factories.Dataset()
+        org = factories.Organization()
+        d1 = factories.Dataset(owner_org=org['id'])
         csv_writer.writerow(dict(
             title=d1['title'],
             url=config.get('ckan.site_url') + url_for(
                 controller='package', action='read', id=d1['id']),
-            owner='',
+            owner=org['title'],
             created_at=d1['metadata_created']
         ))
 
@@ -249,12 +250,12 @@ class TestStatsReports(FunctionalTestBase):
 
         nt.assert_equal(csv_report.body, required_report)
 
-        d3 = factories.Dataset()
+        d3 = factories.Dataset(owner_org=org['id'])
         csv_writer.writerow(dict(
             title=d3['title'],
             url=config.get('ckan.site_url') + url_for(
                 controller='package', action='read', id=d3['id']),
-            owner='',
+            owner=org['title'],
             created_at=d3['metadata_created']
         ))
 

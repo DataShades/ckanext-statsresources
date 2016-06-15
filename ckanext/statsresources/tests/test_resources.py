@@ -64,9 +64,10 @@ class TestStatsResources(FunctionalTestBase):
         self.cmd._create_resource = self._create_resource
         self.cmd._upload_report = self._upload_report
 
-    def _get_report_content(self, report):
+    def _get_report_content(self, report, kwargs):
         app = _get_test_app()
-        return app.get(url_for('report', report_name=report.name, format=report.format))
+        return app.get(url_for(
+            'report', report_name=report.name, format=report.format, **kwargs))
 
     def _create_resource(self, data, files):
         factories.Resource(**data)
