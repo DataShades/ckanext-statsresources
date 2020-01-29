@@ -1,7 +1,7 @@
 """Tests for plugin.py."""
 from ckan.tests.helpers import FunctionalTestBase
 from ckanext.report.model import init_tables as init_report_tables
-from pylons import config
+from ckan.plugins.toolkit import config
 from routes import url_for
 from sqlalchemy import exc as sa_exc
 import ckan.tests.factories as factories

@@ -1,5 +1,5 @@
 from ckan import model
-from ckan.lib.helpers import OrderedDict
+from collections import OrderedDict
 from ckanext.report import lib
 from ckan.lib.helpers import url_for, Page
 from ckanext.statsresources.helpers import get_org_title
@@ -45,8 +45,7 @@ def dataset_creation(
                     (
                         "url",
                         url_for(
-                            controller="package",
-                            action="read",
+                            "dataset.read",
                             id=pkg.id,
                             qualified=True,
                         ),

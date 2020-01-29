@@ -20,7 +20,7 @@ data - other data values, as a dict
       {% for row in table[:100] %}
         <tr>
           <td>
-            <a href="{{ h.url_for(controller='package', action='read', id=row.title) }}">
+            <a href="{{ h.url_for('dataset.read', id=row.title) }}">
               {{ row.title }}
             </a>
           </td>
@@ -32,4 +32,6 @@ data - other data values, as a dict
     </tbody>
 </table>
 
+{#
 {% resource 'statsresources/scripts/statsresources-js-autosubmit.js' %}
+#}

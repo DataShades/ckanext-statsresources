@@ -1,9 +1,11 @@
 from __future__ import absolute_import
+
 import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
+import ckan.plugins.toolkit as tk
 from ckanext.report.interfaces import IReport
+
+import ckanext.statsresources.views as views
 from . import reports
-from routes.mapper import SubMapper
 
 
 class StatsresourcesPlugin(plugins.SingletonPlugin):
@@ -11,36 +13,19 @@ class StatsresourcesPlugin(plugins.SingletonPlugin):
 
     plugins.implements(plugins.IConfigurer)
     plugins.implements(IReport)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    # plugins.implements(plugins.IBlueprint)
 
-    def before_map(self, map):
-        report_ctlr = (
-            "ckanext.statsresources.controllers:StatsresourcesController"
-        )
-        with SubMapper(
-            map, controller=report_ctlr, action="recheck_access"
-        ) as m:
-            m.connect("reports", "/report", original_action="index")
-            m.connect("report", "/report/:report_name", original_action="view")
-            m.connect(
-                "report-org",
-                "/report/:report_name/:organization",
-                original_action="view",
-            )
-        map.connect(
-            "/data/report/{url:.*}",
-            controller=report_ctlr,
-            action="data_redirect",
-        )
-        return map
+    # IBlueprint
+    # def get_blueprint(self):
+        # return views.get_blueprints()
 
     # IConfigurer
 
     def update_config(self, config_):
         """Update instance config."""
-        toolkit.add_template_directory(config_, "templates")
-        toolkit.add_public_directory(config_, "public")
-        toolkit.add_resource("fanstatic", "statsresources")
+        tk.add_template_directory(config_, "templates")
+        tk.add_public_directory(config_, "public")
+        tk.add_resource("fanstatic", "statsresources")
 
     # IReport
 
